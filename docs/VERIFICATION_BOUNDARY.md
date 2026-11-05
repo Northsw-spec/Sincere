@@ -59,3 +59,50 @@ python3 -m sincere_ci.incremental \
 Then repeat with the preceding step as the next input and a new review/output path. Each step creates a new file with restricted permissions, checks the write by rereading it and never replaces the original. The private storage system must itself be durable, versioned and secured, with backups; an upload to Drive must be independently read back before it can be counted as persisted progress. The helper performs NO Google Drive upload and NO PDF regeneration. A valid private snapshot has exactly 39 books, 929 chapters and 23,145 verses (fail closed). The synthetic test function can be run without that requirement but the CLI cannot.
 
 The `CONFIRMED_REORDER` status and evidence fields are author assertions. **The helper does not independently establish the historical Hebrew syntax, inspect CVOT PDF font attributes, verify every CHES span, or approve a final edition.** An unverified suggestion must never be passed as approved. Keep step files, review contents, source-derived snapshots and any logs containing them private, outside the public repository and Actions artifacts.
+
+## Current preferred private editorial format (2026-11-05)
+
+The user-approved division of responsibility is:
+
+- **Markdown**: primary editable source of the GT, one private working `.md` volume per book.
+- **JSON**: machine-readable, private per-verse source review journals and Markdown SHA-256 chains.
+- **PDF**: generated reader / publication artifact after full private GT regression, never the line-by-line edit target.
+
+The complete v3.1 ZIP already contains 39 Markdown volumes with 929 chapter headings
+and 23,145 numbered verses. The private `CHES_CVOT_GT` Drive project holds an
+**unmodified v3.1 working copy** (39 Markdown volumes plus a JSON working-state manifest
+and empty review journal). Do not store that private copy, the Drive identifier or any
+of its actual verse contents in GitHub.
+
+The preferred private CLI for one properly CHES/CVOT-attested, *necessary for
+reader comprehension*, same-verse word reordering is:
+
+```sh
+python3 -m sincere_ci.markdown \
+  --original-md /private/current/001_book.md \
+  --review-json /private/approved_single_verse_review.json \
+  --revised-md /private/next/001_book_revision_0001.md \
+  --revision-json /private/next/revision_0001.json
+```
+
+The command is **local only**: it rejects prior-applied or stale proposals, changes
+exactly one numbered verse, preserves verb/word tokens exactly, writes a new
+Markdown book and separate JSON evidence+before/after-hash journal without
+overwriting originals, and rereads them. It does not upload or certify anything.
+
+After generating, upload the **new immutable private Markdown revision and JSON
+journal** to the protected Drive folder and **download both back, byte-for-byte**.
+Treat the revised book as current only if both round trips match their SHA-256
+fingerprints. Prefer new revision filenames and an append-only active-version
+manifest rather than overwriting existing files. Do not count a correction merely
+because local write or public CI succeeds. No actual verse corrections were made
+by the initial v3.1 working-copy migration.
+
+**Reader comprehension is the edit criterion:** unusual or non-idiomatic
+word order is acceptable when a reader acquainted with the preface and chapter
+context can genuinely understand the text. Never reorder solely to force
+subject-before-verb, or because CVOT offers a different natural-sounding order.
+
+The earlier `sincere_ci.incremental` JSON-snapshot helper is retained for
+backward compatibility and synthetically tested but **not** the preferred manuscript
+authoring format.
