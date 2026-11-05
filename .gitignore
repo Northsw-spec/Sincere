@@ -1,0 +1,27 @@
+# Never stage private source, canonical readers, or working material.
+*.pdf
+*.zip
+*.odt
+*.docx
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.sqlite
+*.db
+*.log
+*.env
+.env.*
+private/
+source/
+sources/
+manuscripts/
+volumes/
+releases/
+work/
+out/
+artifacts/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
