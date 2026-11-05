@@ -42,3 +42,20 @@ The command fails on an unexpected text change or incomplete 39-book / 929-chapt
 The original CHES ZIP, CVOT PDF, manuscript volumes, large private ledgers, source text excerpts and Drive credentials must **not** be committed or included in public CI logs/artifacts. Only source-independent code, synthetic fixtures and non-sensitive aggregate test reports belong in this public repository.
 
 Until a full real-source verification and publication audit passes, the GT reader must retain `DRAFT_REVIEW_REQUIRED`; do not use terms such as "filologically complete" or "all verses verified." Passing CI here is necessary as a software check, not sufficient to publish a new Bible edition.
+
+## One verse at a time — private working revisions
+
+New source-independent helper: `sincere_ci.incremental`. It accepts a **private, already tokenized** latest reader snapshot and **one manually verified review** at a time. Its output is an immutable, private JSON bundle containing the revised snapshot, corresponding review journal, and the exact SHA-256 of the preceding input file. It refuses stale, duplicate, uncertain or lexically changed verses and changes no other verse.
+
+In a trusted private runtime **only**, after independently verifying real source syntax and using a new private output filename:
+
+```bash
+python3 -m sincere_ci.incremental \
+  --input /private/working-snapshot.json \
+  --review /private/next-reviewed-verse.json \
+  --output /private/revisions/step-00001.json
+```
+
+Then repeat with the preceding step as the next input and a new review/output path. Each step creates a new file with restricted permissions, checks the write by rereading it and never replaces the original. The private storage system must itself be durable, versioned and secured, with backups; an upload to Drive must be independently read back before it can be counted as persisted progress. The helper performs NO Google Drive upload and NO PDF regeneration. A valid private snapshot has exactly 39 books, 929 chapters and 23,145 verses (fail closed). The synthetic test function can be run without that requirement but the CLI cannot.
+
+The `CONFIRMED_REORDER` status and evidence fields are author assertions. **The helper does not independently establish the historical Hebrew syntax, inspect CVOT PDF font attributes, verify every CHES span, or approve a final edition.** An unverified suggestion must never be passed as approved. Keep step files, review contents, source-derived snapshots and any logs containing them private, outside the public repository and Actions artifacts.
