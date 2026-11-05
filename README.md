@@ -5,7 +5,9 @@ This repository holds **source-independent code and automated tests only** for t
 ## What this repository provides
 
 - `sincere_ci/gate.py`: fail-closed mechanical checks for verse-by-verse before/after journals and full-manuscript comparisons.
-- `tests/test_gate.py`: synthetic tests, including rejected vocabulary/verb-form edits, missing evidence, cross-verse changes and numbering drift.
+- `sincere_ci/markdown.py`: one-verse source-attested **private Markdown** update with a separate immutable JSON revision journal.
+- `sincere_ci/incremental.py`: earlier JSON-snapshot proof of concept, maintained for compatibility; Markdown is now the editable manuscript format.
+- `tests/test_gate.py`, `tests/test_markdown.py`: synthetic tests, including rejected vocabulary/verb-form edits, stale reviews, cross-verse changes, immutable Markdown snapshots and numbering drift.
 - `.github/workflows/sincere-ci.yml`: Ubuntu GitHub Actions job named `sincere-required-ci`.
 - [Verification boundary and private release process](docs/VERIFICATION_BOUNDARY.md).
 
